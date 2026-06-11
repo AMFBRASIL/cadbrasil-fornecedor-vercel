@@ -1,6 +1,16 @@
 import { z } from "zod";
 
-const envSchema = z.object({
+/** Vercel/painéis costumam gravar variáveis vazias ("") — tratar como ausente para aplicar defaults. */
+function normalizeEnvInput(raw: unknown): unknown {
+  if (!raw || typeof raw !== "object") return raw;
+  const cleaned: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(raw)) {
+    cleaned[key] = typeof value === "string" && value.trim() === "" ? undefined : value;
+  }
+  return cleaned;
+}
+
+const envSchema = z.preprocess(normalizeEnvInput, z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   APP_URL: z
     .string()
@@ -50,7 +60,11 @@ const envSchema = z.object({
   SMTP_FROM_NAME: z.string().default("CADBRASIL"),
   SMTP_FROM_EMAIL: z.string().email().optional(),
 
-  STORAGE_PROVIDER: z.literal("s3").default("s3"),
+  STORAGE_PROVIDER: z
+    .string()
+    .optional()
+    .transform((v) => (v?.trim().toLowerCase() === "s3" || !v?.trim() ? "s3" : v))
+    .pipe(z.literal("s3")),
   STORAGE_MAX_FILE_SIZE_MB: z.coerce.number().int().positive().default(10),
   STORAGE_S3_BUCKET: z.string().optional(),
   STORAGE_S3_REGION: z.string().default("us-east-1"),
@@ -62,7 +76,7 @@ const envSchema = z.object({
     .optional()
     .transform((v) => v === "true"),
   STORAGE_CDN_URL: z.string().optional(),
-});
+}));
 
 export type Env = z.infer<typeof envSchema>;
 
