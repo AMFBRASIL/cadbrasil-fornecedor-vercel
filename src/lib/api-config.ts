@@ -1,11 +1,19 @@
+function normalizeApiBaseUrl(raw: string): string {
+  const trimmed = raw.trim().replace(/\/$/, "");
+  if (!trimmed) return "";
+  // Sem protocolo o browser trata como path relativo (ex.: front.vercel.app/back.vercel.app/...)
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
+}
+
 /** URL base da API (backend Next.js). */
 export function getApiBaseUrl(): string {
   const fromVite = import.meta.env.VITE_API_URL as string | undefined;
-  if (fromVite) return fromVite.replace(/\/$/, "");
+  if (fromVite) return normalizeApiBaseUrl(fromVite);
 
   // SSR na Vercel: variável disponível em process.env no build/runtime
   if (typeof process !== "undefined" && process.env.VITE_API_URL) {
-    return process.env.VITE_API_URL.replace(/\/$/, "");
+    return normalizeApiBaseUrl(process.env.VITE_API_URL);
   }
 
   // Dev local: proxy Vite encaminha /api → localhost:3001
