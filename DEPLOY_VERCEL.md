@@ -66,7 +66,8 @@ O MySQL precisa aceitar conexões externas (não pode ser `127.0.0.1`). Opções
 
 Configurado em `backend/vercel.json`:
 
-- `GET /api/cron/health-check` a cada 6 horas
+- `GET /api/cron/health-check` uma vez por dia (`0 3 * * *` = 00:00 horário de Brasília)
+- Plano **Hobby** da Vercel permite no máximo 1 cron por dia; para intervalos menores (ex.: a cada 6h), é necessário o plano **Pro**
 - Vercel envia `Authorization: Bearer {CRON_SECRET}` automaticamente
 
 ---

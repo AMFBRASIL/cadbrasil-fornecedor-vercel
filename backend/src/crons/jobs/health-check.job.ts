@@ -4,7 +4,7 @@ import type { CronJob } from "@/crons/types";
 export const healthCheckJob: CronJob = {
   name: "health-check",
   description: "Verifica conectividade com bancos legado e v2",
-  schedule: "*/15 * * * *",
+  schedule: "0 3 * * *",
   enabled: () => true,
   async run() {
     const [legacyOk, writeOk] = await Promise.all([
