@@ -1,0 +1,29 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "crons": [
+    {
+      "path": "/api/cron/health-check",
+      "schedule": "0 */6 * * *"
+    }
+  ],
+  "functions": {
+    "src/app/api/sicaf-assistant/chat/route.ts": {
+      "maxDuration": 120
+    },
+    "src/app/api/sicaf-assistant/upload/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/ai-reader/analisar/route.ts": {
+      "maxDuration": 120
+    },
+    "src/app/api/admin/relatorios/gerar/route.ts": {
+      "maxDuration": 120
+    },
+    "src/app/api/**/route.ts": {
+      "memory": 1024
+    }
+  }
+}
