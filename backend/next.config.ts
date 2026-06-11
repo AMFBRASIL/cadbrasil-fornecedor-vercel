@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
   },
   serverExternalPackages: [
     "knex",
+    "mysql2",
+    "multer",
     "openai",
     "pdf-parse",
     "puppeteer",

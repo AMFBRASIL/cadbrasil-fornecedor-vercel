@@ -22,6 +22,9 @@
     "src/app/api/admin/relatorios/gerar/route.ts": {
       "maxDuration": 120
     },
+    "src/app/api/admin/dashboard/route.ts": {
+      "maxDuration": 60
+    },
     "src/app/api/**/route.ts": {
       "memory": 1024
     }

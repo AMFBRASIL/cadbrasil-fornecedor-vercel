@@ -55,11 +55,15 @@ function ensureDbReady() {
 function initSicafAgentModules() {
   if (initialized) return;
   loadModule("database/connection").initDatabase();
-  loadModule("services/ia.service").init();
+  try {
+    loadModule("services/ia.service").init();
+  } catch (e) {
+    console.warn("[sicaf-bridge] IA init:", e.message);
+  }
   try {
     loadModule("services/storage.service").init();
   } catch (e) {
-    console.warn("[sicaf-bridge] Storage dirs:", e.message);
+    console.warn("[sicaf-bridge] Storage init:", e.message);
   }
   initialized = true;
 }
