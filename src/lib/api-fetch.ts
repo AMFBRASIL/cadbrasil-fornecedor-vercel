@@ -1,4 +1,4 @@
-import { apiUrl } from "@/lib/api-config";
+import { apiUrl, ensureAbsoluteApiUrl } from "@/lib/api-config";
 import { readAuthToken } from "@/lib/auth-cookie";
 
 type FetchOptions = RequestInit & {
@@ -20,7 +20,7 @@ export async function apiFetch(input: string, options: FetchOptions = {}) {
     h.set("Content-Type", "application/json");
   }
 
-  const url = input.startsWith("http") ? input : apiUrl(input);
+  const url = ensureAbsoluteApiUrl(input.startsWith("http") ? input : apiUrl(input));
   const res = await fetch(url, { ...rest, headers: h });
   if (allowNotFound && res.status === 404) {
     return res;
